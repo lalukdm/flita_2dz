@@ -64,19 +64,14 @@ void write_dot (int vertices, int edges, char** graph_matrix){
 
 int main() {
 
-    int vertices, edges;
+    mtrx graph;
 
-    read_dim(&vertices, &edges);
+    read_dim(&graph.vertices, &graph.edges); 
 
-    mtrx graph; 
-
-    graph.matrix = (char**)malloc(sizeof(char*) * edges);
-    for(int i = 0; i < edges; i++){
-        graph.matrix[i] = (char*)malloc(sizeof(char) * vertices);
+    graph.matrix = (char**)malloc(sizeof(char*) * graph.edges);
+    for(int i = 0; i < graph.edges; i++){
+        graph.matrix[i] = (char*)malloc(sizeof(char) * graph.vertices);
     }
-
-    graph.edges = edges;
-    graph.vertices = vertices;
 
     read_matrix(graph.vertices, graph.edges, graph.matrix);
 
