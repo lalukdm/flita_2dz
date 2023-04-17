@@ -19,34 +19,34 @@ void read_dim(int* vertices, int* edges) {
     fclose(matrix);
 }
 
-void read_matrix(int vertices, int edges, char** graph_matrix){
+void read_matrix(mtrx *graph){
     char transit[8];
     FILE *matrix = fopen("matrix.txt", "r");
-    for (int i = 0; i < vertices && !feof(matrix); i++)
-        for (int j = 0; j < edges && !feof(matrix); j++){
+    for (int i = 0; i < (*graph).vertices && !feof(matrix); i++)
+        for (int j = 0; j < (*graph).edges && !feof(matrix); j++){
             fscanf(matrix, "%s ", &transit);
-            graph_matrix[i][j] = (char)atoi(transit);
+            (*graph).matrix[i][j] = (char)atoi(transit);
         }
     fclose(matrix);
 }
 
-void write_dot (int vertices, int edges, char** graph_matrix){
+void write_dot (mtrx *graph){
     FILE *dot_file = fopen("graph.dot", "w");
 
     fprintf(dot_file, "digraph G {\n");
 
-    for (int i = 0; i < edges; i++) {
-        for (int j = 0; j < vertices; j++) {
-            if (graph_matrix[j][i] != 0) {
+    for (int i = 0; i < (*graph).edges; i++) {
+        for (int j = 0; j < (*graph).vertices; j++) {
+            if ((*graph).matrix[j][i] != 0) {
             
-                int direction = graph_matrix[j][i] < 0 ? -1 : 1;
-                int label = graph_matrix[j][i] * direction;
+                int direction = (*graph).matrix[j][i] < 0 ? -1 : 1;
+                int label = (*graph).matrix[j][i] * direction;
 
                 int k = j + 1;
-                for (k; k < vertices; k++)
-                    if(graph_matrix[k][i] != 0) break;
+                for (k; k < (*graph).vertices; k++)
+                    if((*graph).matrix[k][i] != 0) break;
                 
-                if (k == vertices) k = j;
+                if (k == (*graph).vertices) k = j;
                 
                 if (direction > 0)
                     fprintf(dot_file, "\t%c -> %c [label = %d];\n", j + 'a', k + 'a', label);
@@ -73,9 +73,9 @@ int main() {
         graph.matrix[i] = (char*)malloc(sizeof(char) * graph.vertices);
     }
 
-    read_matrix(graph.vertices, graph.edges, graph.matrix);
+    read_matrix(&graph);
 
-    write_dot(graph.vertices, graph.edges, graph.matrix);
+    write_dot(&graph);
 
     system("copy graph.dot C:\\Graphviz\\bin & cd C:\\Graphviz\\bin & dot.exe -Tpng graph.dot -o graph.png & move graph.png C:\\c");
 
